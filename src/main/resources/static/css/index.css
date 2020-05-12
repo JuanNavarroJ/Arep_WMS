@@ -1,0 +1,93 @@
+* {
+    margin: 0;
+    padding: 0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+body{
+    width: 100%;
+    height: auto;
+    background: #EFEFBB;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #D4D3DD, #EFEFBB);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #D4D3DD, #EFEFBB); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+
+.form-container-login {
+    position: relative;
+    background: rgba(0, 0, 0, .5);
+    color: azure;
+    width: 100%;
+    max-width: 500px;
+    border-radius: 5px;
+    padding: 20px;
+    margin: 15px auto;
+}
+
+.form-container-big{
+
+    position: relative;
+    background: rgba(108, 112, 114,.7);
+    color: azure;
+    width: 100%;
+    max-width: 500px;
+    margin: 15% auto;
+    border-radius: 5px;
+    padding: 40px 20px 20px 10px;
+}
+
+
+.form-container-login h2{
+    margin: 0 0 28px 0;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 35px;
+}
+
+.form-container-login input[type="text"],
+.form-container-login input[type="password"],
+.form-container-login input[type="email"] {
+    outline: none;
+    background: rgba(0,0,0,.7);
+    display: block;
+    width: 100%;
+    padding: 10px 15px;
+    color: azure;
+    border: none;
+    border-radius: 3px;
+    border-left: 2px solid #f9fdff;
+    margin-bottom: 10px;
+    transition: border-left-width 0.5s;
+}
+
+.form-container-login input[type="text"]:focus,
+.form-container-login input[type="password"]:focus,
+.form-container-login input[type="email"]:focus{
+    border-left: 5px solid #5eb313;
+}
+
+.form-container-login input[type="button"]{
+    border: none;
+    background: #850d0d;
+    width: 35%;
+    color: azure;
+    padding: 5px 0;
+    font-weight: bold;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 25px;
+    letter-spacing: 3px;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: all 0.5s ease;
+    transition-property: background-color, width ;
+}
+
+.form-container-login input[type="button"]:hover{
+    border: none;
+    width: 100%;
+    border-radius: 5px;
+    background: #db2526;
+    color: black;
+}
