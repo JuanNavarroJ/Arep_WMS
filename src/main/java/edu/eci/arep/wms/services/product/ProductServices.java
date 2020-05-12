@@ -21,13 +21,10 @@ public interface ProductServices {
     
     public List<Product> getProductsByEntityName(String entityName);
     
-    public Product getProductByEntityNameAndProductName(String entityName, String productName);
-    
+    public Product getProductById(String productId);
     
     public void createNewProduct(Product pr);
 
-    
-    public void deleteProductByEntityAndName(String productName, String entityName);
-    
-    
+    public void deleteProductById(String productId);
+
 }

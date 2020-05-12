@@ -19,7 +19,7 @@ public interface EntityServices {
     public void createNewEntity(Entity en);
 
     public Entity getEntityByName(String entityName);
-
+    
     public void deleteEntityByName(String entityName);
     
 

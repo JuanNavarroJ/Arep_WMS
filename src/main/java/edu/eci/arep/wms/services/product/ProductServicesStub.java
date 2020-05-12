@@ -5,6 +5,7 @@
  */
 package edu.eci.arep.wms.services.product;
 
+import edu.eci.arep.wms.model.Entity;
 import edu.eci.arep.wms.model.Product;
 import edu.eci.arep.wms.persistence.WmsDB;
 import java.util.List;
@@ -33,23 +34,26 @@ public class ProductServicesStub implements ProductServices{
 
     @Override
     public void createNewProduct(Product pr) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        newDb();
+        wsdb.createNewProduct(pr);
     }
 
     @Override
-    public void deleteProductByEntityAndName(String productName, String entityName) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void deleteProductById(String productId) {
+        newDb();
+        wsdb.deleteProductById(productId);
     }
 
     @Override
     public List<Product> getProductsByEntityName(String entityName) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        newDb();
+        Entity e= wsdb.getEntityByName(entityName);
+        return wsdb.getProductsByEntityName(e.getEntityId());
     }
 
     @Override
-    public Product getProductByEntityNameAndProductName(String entityName, String productName) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Product getProductById(String productId){
+        newDb();
+        return wsdb.getProductById(productId);
     }
-
-
 }

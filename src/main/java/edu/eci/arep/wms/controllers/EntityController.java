@@ -91,7 +91,6 @@ public class EntityController {
         }
     }
 
-
     @RequestMapping(method = RequestMethod.DELETE, path = {"entities/{entityName}"})
     public ResponseEntity<?> deleteEntityByName(@PathVariable("entityName") String entityName) {
         try {

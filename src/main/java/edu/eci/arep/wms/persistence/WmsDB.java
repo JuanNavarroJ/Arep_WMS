@@ -60,6 +60,7 @@ public class WmsDB {
             while (rs.next()) {
                 e = new Entity(rs.getString("entityname"), rs.getString("entityemail"), rs.getString("entitypassword"));
                 e.setEntityId("entityid");
+                e.setEntityProducts(getProductsByEntityName(e.getEntityId()));
                 allEntities.add(e);
             }
             stmt.close();
@@ -104,6 +105,7 @@ public class WmsDB {
             if (rs.next()){
                 e = new Entity(rs.getString("entityname"), rs.getString("entityemail"), rs.getString("entitypassword"));
                 e.setEntityId(rs.getString("entityid"));
+                e.setEntityProducts(getProductsByEntityName(e.getEntityId()));
             }
             pstmt.close();
             rs.close();
@@ -111,7 +113,7 @@ public class WmsDB {
             Logger.getLogger(WmsDB.class.getName()).log(Level.SEVERE, null, ex);
         }
         return e;
-    }    
+    }      
     
     public void deleteEntityByName(String entityName) {
         Statement stmt = null;
@@ -150,11 +152,9 @@ public class WmsDB {
             ResultSet rs = stmt.executeQuery("SELECT * FROM product;");
             c.close();
             while (rs.next()) {
-                /**
-                p = new Product(rs.getString("productname"), rs.getString("productdescription"),
-                        rs.getDouble("productprice"), rs.getString("productImage"));
+                p = new Product(rs.getString("productname"), rs.getString("productdescription"), rs.getDouble("productprice"), rs.getInt("productcant"), rs.getString("productentity"));
                 p.setProductId(rs.getString("productid"));
-                allProduct.add(p);**/
+                allProduct.add(p);
             }
             stmt.close();
             rs.close();
@@ -163,81 +163,7 @@ public class WmsDB {
         }
         return allProduct;
     }
-
-    /**
-     * Metodo que permite consultar todos los productos relacionados a un usuario.
-     * 
-     * @param userNickname Es el nickName del usario.
-     * @return Retorna una lista de productos relacionados al usario dado.
-     */
-    public List<Product> getAllProductsOfUserNickname(String userNickname) {
-        String SQL = "SELECT * FROM product WHERE productuser = ?";
-        List<Product> allProductUser = new ArrayList<Product>();
-        try {
-            /**
-            if (u == (null)) {
-                u = getUserByUserNickname(userNickname);
-            }
-            * **/
-            getConnection();
-            PreparedStatement pstmt = c.prepareStatement(SQL, ResultSet.TYPE_SCROLL_SENSITIVE,
-                    ResultSet.CONCUR_UPDATABLE);
-            pstmt.setString(1, userNickname);
-            ResultSet rs = pstmt.executeQuery();
-            c.close();
-            while (rs.next()) {
-                /**
-                p = new Product(rs.getString("productname"), rs.getString("productdescription"),
-                        rs.getDouble("productprice"), rs.getString("productImage"));
-                p.setProductId(rs.getString("productid"));
-
-                allProductUser.add(p);
-                * **/
-            }
-            // Se Agregan todos los productos al usuario.
-            //u.setProducts(allProductUser);
-            pstmt.close();
-            rs.close();
-        } catch (Exception ex) {
-            Logger.getLogger(WmsDB.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return allProductUser;
-    }
-
-    public Product getProductByIdOfUserNickname(String id) {
-        String SQL = "SELECT * FROM product WHERE productid = ?";
-        Product product = null;
-        try {
-            
-            getConnection();
-            PreparedStatement pstmt = c.prepareStatement(SQL, ResultSet.TYPE_SCROLL_SENSITIVE,
-                    ResultSet.CONCUR_UPDATABLE);
-            pstmt.setString(1, id);
-            ResultSet rs = pstmt.executeQuery();
-            c.close();
-            while (rs.next()) {
-                /**
-                p = new Product(rs.getString("productname"), rs.getString("productdescription"),
-                        rs.getDouble("productprice"), rs.getString("productImage"));
-                p.setProductId(rs.getString("productid"));
-
-                product = p;
-                * */
-            }
-            pstmt.close();
-            rs.close();
-        } catch (Exception ex) {
-            Logger.getLogger(WmsDB.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return product;
-    }
-
-    /**
-     * Metodo que permite registrar un nuevo producto en la base de datos.
-     * 
-     * @param pd Es el producto que se agregara a la base de datos.
-     * 
-     */
+    
     public void createNewProduct(Product pd) {
         Statement stmt = null;
         try {
@@ -245,13 +171,11 @@ public class WmsDB {
             getConnection();
             c.setAutoCommit(false);
             stmt = c.createStatement();
-            /**
-            String sql = "INSERT INTO product (productid,productname,productdescription,productprice,productuser,productauction,productImage) "
+            String sql = "INSERT INTO product (productid,productname,productdescription,productprice,productcant,productentity) "
                     + "VALUES ('" + pd.getProductId() + "','" + pd.getProductName() + "','" + pd.getProductDescription()
-                    + "','" + pd.getProductPrice() + "','" + pd.getProductUser() + "',null,'" + pd.getProductImage()
+                    + "','" + pd.getProductPrice() + "','" + pd.getProductCant() + "','" + pd.getProductEntity()
                     + "');";
             stmt.executeUpdate(sql);
-            * **/
             stmt.close();
             c.commit();
             c.close();
@@ -259,46 +183,14 @@ public class WmsDB {
             Logger.getLogger(WmsDB.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-    /**
-     * Metodo que edita un producto asociado al usuario.
-     * 
-     * @param productId Id del producto
-     * @param pd        Es el producto.
-     */
-    public void editProductById(String productId, Product pd) {
+    
+    public void deleteProductById(String productId) {
         Statement stmt = null;
         try {
             Class.forName("org.postgresql.Driver");
             getConnection();
             c.setAutoCommit(false);
-            /**
-            String sql1 = "UPDATE product SET productname = '" + pd.getProductName() + "', productdescription = '"
-                    + pd.getProductDescription() + "' , productprice = '" + pd.getProductPrice()
-                    + "' , productImage = '" + pd.getProductImage() + "' WHERE productid = '" + productId + "' ";
-            stmt = c.createStatement();
-            stmt.executeUpdate(sql1);
-            * */
-            c.commit();
-            c.close();
-        } catch (Exception ex) {
-            Logger.getLogger(WmsDB.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    /**
-     * Metodo que elimina un producto asociado al usuario.
-     * 
-     * @param id     Id del producto
-     * @param idUser Id del usuario.
-     */
-    public void deleteProductByIdOfUserNickname(String id, String idUser) {
-        Statement stmt = null;
-        try {
-            Class.forName("org.postgresql.Driver");
-            getConnection();
-            c.setAutoCommit(false);
-            String sql1 = "DELETE FROM product WHERE productuser = '" + idUser + "' AND productid = '" + id + "'";
+            String sql1 = "DELETE FROM product WHERE productid = '" + productId + "'";
             stmt = c.createStatement();
             stmt.executeUpdate(sql1);
             c.commit();
@@ -307,26 +199,53 @@ public class WmsDB {
             Logger.getLogger(WmsDB.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-    /**
-     * Metodo que elimina todos los productos cuando un usuario es eliminado.
-     * 
-     * @param idUser Es el id del usuario
-     */
-    private void deleteAllProductByIdOfUserNickname(String idUser) {
-        Statement stmt = null;
+    
+    
+    public List<Product> getProductsByEntityName(String entityId) {
+        String SQL = "SELECT * FROM product WHERE productentity = ?";
+        List<Product> allProductEnitiy = new ArrayList<Product>();
         try {
             Class.forName("org.postgresql.Driver");
             getConnection();
             c.setAutoCommit(false);
-            String sql1 = "DELETE FROM product WHERE productuser = '" + idUser + "'";
-            stmt = c.createStatement();
-            stmt.executeUpdate(sql1);
-            c.commit();
+            PreparedStatement pstmt = c.prepareStatement(SQL, ResultSet.TYPE_SCROLL_SENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            pstmt.setString(1, entityId);
+            ResultSet rs = pstmt.executeQuery();
             c.close();
+            while (rs.next()) {
+                p = new Product(rs.getString("productname"), rs.getString("productdescription"), rs.getDouble("productprice"), rs.getInt("productcant"), rs.getString("productentity"));
+                p.setProductId(rs.getString("productid"));
+                allProductEnitiy.add(p);
+            }
+            pstmt.close();
+            rs.close();
         } catch (Exception ex) {
             Logger.getLogger(WmsDB.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return allProductEnitiy;
     }
 
+    public Product getProductById(String productId) {
+        String SQL = "SELECT * FROM product WHERE productid = ? ";
+        p = null;
+        try {
+            Class.forName("org.postgresql.Driver");
+            getConnection();
+            c.setAutoCommit(false);
+            PreparedStatement pstmt = c.prepareStatement(SQL, ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            pstmt.setString(1, productId);
+            ResultSet rs = pstmt.executeQuery();
+            c.close();
+            if (rs.next()){
+                p = new Product(rs.getString("productname"), rs.getString("productdescription"), rs.getDouble("productprice"), rs.getInt("productcant"), rs.getString("productentity"));
+                p.setProductId(rs.getString("productid"));
+            }
+            pstmt.close();
+            rs.close();
+        } catch (Exception ex) {
+            Logger.getLogger(WmsDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return p;
+    }
 }

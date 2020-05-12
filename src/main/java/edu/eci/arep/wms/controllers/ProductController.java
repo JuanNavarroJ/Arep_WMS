@@ -7,7 +7,6 @@ package edu.eci.arep.wms.controllers;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import edu.eci.arep.wms.model.Entity;
 import edu.eci.arep.wms.model.Product;
 import edu.eci.arep.wms.services.product.ProductServices;
 import edu.eci.arep.wms.services.entity.EntityServices;
@@ -74,11 +73,11 @@ public class ProductController {
     }
 
     @RequestMapping(method = RequestMethod.GET, path = {"products/{entityName}/{productId}"})
-    public ResponseEntity<?> getProductByNicknameById(@PathVariable("entityName") String entityName, @PathVariable("productId") String producId) {
+    public ResponseEntity<?> getProductByEntityNameAndId(@PathVariable("entityName") String entityName, @PathVariable("productId") String productId) {
         try {
-            System.out.println("Consultando producto: "+producId);
+            System.out.println("Consultando producto con id: "+productId + " De la entidad : "+entityName);
 
-            Product product= pService.getProductByEntityNameAndProductName(entityName, producId);
+            Product product= pService.getProductById(productId);
             
             String data = new Gson().toJson(product);
 
@@ -91,7 +90,7 @@ public class ProductController {
     
     @RequestMapping(method = RequestMethod.POST, path = "products")
     public ResponseEntity<?> createNewProduct(@RequestBody String product ) {
-        //Formato de json {"1":{"productName":"PruebaOnline","productDescription":"pruebaOnlineeeee","productPrice":"20000","productUser":"david","productImage":""}}
+        //Formato de json {"1":{"productName":"Televisor","productDescription":"Samsung de 50 pulgadas","productPrice":"2300000","productCant":"120","productEntity":"5ebad7b26c200873989fc77e"}}
         try {
             System.out.println("Creando producto nuevo...");
             //Pasar el String JSON a un Map
@@ -104,12 +103,10 @@ public class ProductController {
             
             Product pd = result.get(nameKeys[0]);
             
-            
             //Entity en = eService.getEntityByName(product)pd.getProductEntity());
             
             ObjectId newObjectIdProduct = new ObjectId(new Date());
             pd.setProductId(newObjectIdProduct.toHexString());
-            //pd.setProductUser(idUser.getIdUser());
             
             pService.createNewProduct(pd);
                
@@ -121,19 +118,15 @@ public class ProductController {
         }
     }
     
-    @RequestMapping(method = RequestMethod.DELETE, path = {"products/{usernickName}/{productId}"})
-    public ResponseEntity<?> deleteProductById(@PathVariable("productId") String productId, @PathVariable("usernickName") String username) {
+    @RequestMapping(method = RequestMethod.DELETE, path = {"products/{productId}"})
+    public ResponseEntity<?> deleteProductById(@PathVariable("productId") String productId) {
         try {
             System.out.println("Eliminando Producto: "+productId);
-            //Entity us = uService.getUserByUserNickname(username);
-
-            //pService.deleteProductByIdOfUserNickname(productId, "12");
-
+            pService.deleteProductById(productId);
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
         } catch (Exception ex) {
             Logger.getLogger(EntityController.class.getName()).log(Level.SEVERE, null, ex);
-            return new ResponseEntity<>("No se ha podido eliminar el producto con el id: " + productId,
-                    HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("No se ha podido eliminar el producto con id: " + productId,HttpStatus.FORBIDDEN);
         }
     }
 }
