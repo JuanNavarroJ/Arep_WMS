@@ -28,7 +28,7 @@ import org.springframework.stereotype.Service;
 public class WmsDB {
 
     // Atributos
-    private static final String urlDb = "jdbc:postgresql://wmsdb.cu0adiovages.us-east-1.rds.amazonaws.com:5432/wmsdb?user=wmsdb&password=juanjuan";
+    private static final String urlDb = "jdbc:postgresql://wmsdb2.cu0adiovages.us-east-1.rds.amazonaws.com:5432/wmsdb2?user=wmsdb2&password=juanjuan";
     private Connection c;
     private Entity e;
     private Product p;
